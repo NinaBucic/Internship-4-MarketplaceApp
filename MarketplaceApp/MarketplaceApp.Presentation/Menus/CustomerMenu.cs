@@ -73,7 +73,9 @@ namespace MarketplaceApp.Presentation.Menus
                         Console.ReadKey();
                         break;
                     case "6":
-                        //ViewFavorites();
+                        ViewFavorites();
+                        Console.WriteLine("\nPress any key to return...");
+                        Console.ReadKey();
                         break;
                     case "0":
                         exit = true;
@@ -287,6 +289,22 @@ namespace MarketplaceApp.Presentation.Menus
             Console.WriteLine(output.ToString());
         }
 
+        private void ViewFavorites()
+        {
+            Console.Clear();
+            Console.WriteLine("Your Favorites:\n");
+
+            if (_customer.Favorites.Count == 0)
+            {
+                Console.WriteLine("You have not added any products to your favorites.");
+                return;
+            }
+
+            foreach (var product in _customer.Favorites)
+            {
+                Console.WriteLine($"- {product.Name}: {Helpers.FormatAsUSD(product.Price)} (Status: {product.Status})");
+            }
+        }
 
 
     }
