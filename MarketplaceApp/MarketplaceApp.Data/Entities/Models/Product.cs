@@ -19,7 +19,7 @@ namespace MarketplaceApp.Data.Entities.Models
 
         public Product(string name, string description, double price, ProductCategory category, Seller seller)
         {
-            InstanceId=++id;
+            InstanceId = ++id;
             Name = name;
             Description = description;
             Price = price;

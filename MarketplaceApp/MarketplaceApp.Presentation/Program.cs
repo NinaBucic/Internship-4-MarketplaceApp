@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MarketplaceApp.Data.Entities;
+using MarketplaceApp.Data.Seeds;
+using MarketplaceApp.Domain.Repositories;
+using MarketplaceApp.Presentation.Menus;
 
 namespace MarketplaceApp.Presentation
 {
@@ -10,7 +9,11 @@ namespace MarketplaceApp.Presentation
     {
         static void Main(string[] args)
         {
-            
+            Seed.Initialize();
+            var marketPlace = new MarketPlace();
+            var userRepository = new UserRepository(marketPlace);
+            var homeMenu = new HomeMenu(userRepository);
+            homeMenu.Show();
         }
     }
 }

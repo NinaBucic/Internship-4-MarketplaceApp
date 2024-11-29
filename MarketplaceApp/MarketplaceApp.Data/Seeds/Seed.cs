@@ -12,10 +12,14 @@ namespace MarketplaceApp.Data.Seeds
         public static List<User> Users = new List<User>();
         public static List<Product> Products = new List<Product>();
         public static List<Transaction> Transactions = new List<Transaction>();
+        private static bool _initialized = false;
 
         public static void Initialize()
         {
-            var customers=new List<Customer>
+            if (_initialized) return;
+            _initialized = true;
+
+            var customers = new List<Customer>
             {
                 new Customer("Alice", "alice@example.com", 1500),
                 new Customer("Bob", "bob@example.com", 2500),
@@ -41,9 +45,9 @@ namespace MarketplaceApp.Data.Seeds
 
             var transactions = new List<Transaction>
             {
-                new Transaction(products[0], customers[0], sellers[0]),
-                new Transaction(products[2], customers[1], sellers[1]),
-                new Transaction(products[3], customers[2], sellers[1])
+                new Transaction(products[0], customers[0], sellers[0],products[0].Price),
+                new Transaction(products[2], customers[1], sellers[1],products[2].Price),
+                new Transaction(products[3], customers[2], sellers[1], products[3].Price)
             };
 
             customers[0].Balance -= products[0].Price;
@@ -62,7 +66,5 @@ namespace MarketplaceApp.Data.Seeds
             Products.AddRange(products);
             Transactions.AddRange(transactions);
         }
-
-
     }
 }

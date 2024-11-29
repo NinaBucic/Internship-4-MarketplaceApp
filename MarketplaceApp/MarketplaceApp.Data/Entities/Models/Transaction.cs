@@ -15,8 +15,9 @@ namespace MarketplaceApp.Data.Entities.Models
         public Seller Seller { get; set; }
         public Product Product { get; set; }
         public DateTime DateAndTime { get; private set; }
+        public double Amount { get; set; }
 
-        public Transaction(Product product, Customer customer, Seller seller)
+        public Transaction(Product product, Customer customer, Seller seller, double amount)
         {
             InstanceId = ++id;
             ProductId = product.InstanceId;
@@ -24,6 +25,7 @@ namespace MarketplaceApp.Data.Entities.Models
             Seller = seller;
             Product = product;
             DateAndTime = DateTime.Now;
+            Amount = amount;
         }
     }
 }

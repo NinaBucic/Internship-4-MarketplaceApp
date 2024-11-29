@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MarketplaceApp.Data
+namespace MarketplaceApp.Data.Entities
 {
     public class MarketPlace
     {
         public List<User> Users { get; set; } = Seed.Users;
         public List<Product> Products { get; set; } = Seed.Products;
         public List<Transaction> Transactions { get; set; } = Seed.Transactions;
-        public double Balance { get; private set; }
+        public double Balance { get; set; }
 
-        public MarketPlace() 
+        public MarketPlace()
         {
             Balance = 0.0;
         }
