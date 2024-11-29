@@ -39,9 +39,7 @@ namespace MarketplaceApp.Presentation
                 Console.Write("Invalid input! Please try again (yes/no): ");
                 stringInput = Console.ReadLine()?.ToLower();
             }
-            if (stringInput == "yes")
-                return true;
-            return false;
+            return stringInput == "yes";
         }
 
         public static string EmailValidation(string prompt)
@@ -73,7 +71,7 @@ namespace MarketplaceApp.Presentation
         {
             Console.Write(prompt);
             var doubleInput = 0.0;
-            while (!double.TryParse(Console.ReadLine(), out doubleInput) || doubleInput <= 0)
+            while (!double.TryParse(Console.ReadLine()?.Replace('.', ','), out doubleInput) || doubleInput <= 0)
             {
                 Console.Write("Invalid input! Please enter a positive number: ");
             }
@@ -88,6 +86,28 @@ namespace MarketplaceApp.Presentation
         public static bool IsValid(PromoCode code)
         {
             return DateTime.Now <= code.ExpirationDate;
+        }
+
+        public static ProductCategory SelectProductCategory()
+        {
+            Console.WriteLine("Select product category: ");
+
+            var categories = Enum.GetValues(typeof(ProductCategory)).Cast<ProductCategory>().ToList();
+
+            for (int i = 0; i < categories.Count; i++)
+            {
+                Console.WriteLine($"{i + 1} - {categories[i]}");
+            }
+
+            var choice = PositiveIntegerValidation("Enter category number: ") - 1;
+
+            while (choice < 0 || choice >= categories.Count)
+            {
+                Console.WriteLine("Invalid selection. Please try again.");
+                choice = PositiveIntegerValidation("Enter category number: ") - 1;
+            }
+
+            return categories[choice];
         }
     }
 }

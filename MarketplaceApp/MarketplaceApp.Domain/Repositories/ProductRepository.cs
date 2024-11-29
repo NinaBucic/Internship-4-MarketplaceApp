@@ -78,5 +78,16 @@ namespace MarketplaceApp.Domain.Repositories
             customer.Favorites.Add(product);
         }
 
+        public void AddProduct(Product product, Seller seller)
+        {
+            seller.Products.Add(product);
+            _marketPlace.Products.Add(product);
+        }
+
+        public List<Product> GetProductsBySeller(Seller seller)
+        {
+            return _marketPlace.Products.Where(p => p.Seller == seller).ToList();
+        }
+
     }
 }
