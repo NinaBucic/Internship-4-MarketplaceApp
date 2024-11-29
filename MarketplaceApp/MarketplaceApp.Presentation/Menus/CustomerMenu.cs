@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -62,10 +63,14 @@ namespace MarketplaceApp.Presentation.Menus
                         Console.ReadKey();
                         break;
                     case "4":
-                        //AddToFavorites();
+                        AddToFavorites();
+                        Console.WriteLine("\nPress any key to return...");
+                        Console.ReadKey();
                         break;
                     case "5":
-                        //ViewPurchaseHistory();
+                        ViewPurchaseHistory();
+                        Console.WriteLine("\nPress any key to return...");
+                        Console.ReadKey();
                         break;
                     case "6":
                         //ViewFavorites();
@@ -211,6 +216,78 @@ namespace MarketplaceApp.Presentation.Menus
             Console.WriteLine($"\nThe product '{productToReturn.Name}' has been successfully returned.");
             Console.WriteLine($"Refund issued: {Helpers.FormatAsUSD(refundAmount)}. The product is now back for sale.");
         }
+
+        private void AddToFavorites()
+        {
+            Console.WriteLine("Available Products:\n");
+            var products = _productRepository.GetAllProducts();
+
+            if (products.Count == 0)
+            {
+                Console.WriteLine("No products available.");
+                return;
+            }
+
+            foreach (var p in products)
+            {
+                Console.WriteLine($"ID: {p.InstanceId} - {p.Name} - Price: {Helpers.FormatAsUSD(p.Price)}");
+            }
+
+            var productId = Helpers.PositiveIntegerValidation("\nEnter the ID of the product you want to add to favorites: ");
+            var product = _productRepository.GetProductById(productId);
+            Console.Clear();
+
+            if (product == null)
+            {
+                Console.WriteLine("Product not found.");
+                return;
+            }
+
+            if (_customer.Favorites.Contains(product))
+            {
+                Console.WriteLine($"The product '{product.Name}' is already in your favorites.");
+                return;
+            }
+
+            _productRepository.AddToFavorites(_customer, product);
+            Console.WriteLine($"Product '{product.Name}' has been added to your favorites.");
+        }
+
+        private void ViewPurchaseHistory()
+        {
+            Console.WriteLine("Your Purchase History:\n");
+
+            var transactions = _userRepository.GetCustomerTransactions(_customer);
+
+            if (transactions.Count == 0)
+            {
+                Console.WriteLine("You have not purchased any products yet.");
+                return;
+            }
+
+            var output = new StringBuilder();
+
+            foreach (var transaction in transactions)
+            {
+                if (!transaction.IsReturned)
+                {
+                    output.AppendLine($"- {transaction.Product.Name}: -{Helpers.FormatAsUSD(transaction.Amount)} (Purchased on {transaction.DateAndTime:G})\n");
+                }
+                else
+                {
+                    output.AppendLine($"- {transaction.Product.Name}: -{Helpers.FormatAsUSD(transaction.Amount)} (Purchased on {transaction.DateAndTime:G})");
+                    var returnDate = transaction.ReturnDateAndTime.HasValue
+                        ? $"{transaction.ReturnDateAndTime:G}"
+                        : "Unknown return date";
+
+                    output.AppendLine($"\t\t+{Helpers.FormatAsUSD(transaction.Amount * 0.8)} (Returned on {returnDate})\n");
+                }
+            }
+
+            Console.WriteLine(output.ToString());
+        }
+
+
 
     }
 }

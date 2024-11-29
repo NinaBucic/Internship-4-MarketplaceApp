@@ -67,9 +67,15 @@ namespace MarketplaceApp.Domain.Repositories
 
             product.Status = ProductStatus.ForSale;
             transaction.IsReturned = true;
+            transaction.ReturnDateAndTime = DateTime.Now;
             customer.PurchaseHistory.Remove(product);
 
             return refundAmount;
+        }
+
+        public void AddToFavorites(Customer customer, Product product)
+        {
+            customer.Favorites.Add(product);
         }
 
     }

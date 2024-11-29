@@ -17,6 +17,7 @@ namespace MarketplaceApp.Data.Entities.Models
         public DateTime DateAndTime { get; private set; }
         public double Amount { get; set; }
         public bool IsReturned { get; set; }
+        public DateTime? ReturnDateAndTime { get; set; }
 
         public Transaction(Product product, Customer customer, Seller seller, double amount)
         {

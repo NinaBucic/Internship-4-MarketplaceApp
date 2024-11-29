@@ -44,5 +44,10 @@ namespace MarketplaceApp.Domain.Repositories
         {
             return _marketPlace.Users.FirstOrDefault(user => user.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
         }
+
+        public List<Transaction> GetCustomerTransactions(Customer customer)
+        {
+            return _marketPlace.Transactions.Where(t => t.Customer == customer).ToList();
+        }
     }
 }
