@@ -16,6 +16,7 @@ namespace MarketplaceApp.Data.Entities.Models
         public Product Product { get; set; }
         public DateTime DateAndTime { get; private set; }
         public double Amount { get; set; }
+        public bool IsReturned { get; set; }
 
         public Transaction(Product product, Customer customer, Seller seller, double amount)
         {
@@ -26,6 +27,7 @@ namespace MarketplaceApp.Data.Entities.Models
             Product = product;
             DateAndTime = DateTime.Now;
             Amount = amount;
+            IsReturned = false;
         }
     }
 }

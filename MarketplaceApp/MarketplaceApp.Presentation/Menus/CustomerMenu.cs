@@ -30,8 +30,9 @@ namespace MarketplaceApp.Presentation.Menus
             {
                 Console.Clear();
                 Console.WriteLine(
-                    $"Welcome, {_customer.Name.ToUpper()}! (Customer)\n\n"+
-                    "1 - View Available Products\n"+
+                    $"Welcome, {_customer.Name.ToUpper()}! (Customer)\n"+
+                    $"Your balance: {Helpers.FormatAsUSD(_customer.Balance)}\n\n"+
+                    "1 - View Available Products\n" +
                     "2 - Buy Product\n"+
                     "3 - Return Purchased Product\n"+
                     "4 - Add Product to Favorites\n"+
@@ -56,7 +57,9 @@ namespace MarketplaceApp.Presentation.Menus
                         Console.ReadKey();
                         break;
                     case "3":
-                        //ReturnPurchasedProduct();
+                        ReturnPurchasedProduct();
+                        Console.WriteLine("\nPress any key to return...");
+                        Console.ReadKey();
                         break;
                     case "4":
                         //AddToFavorites();
@@ -136,7 +139,7 @@ namespace MarketplaceApp.Presentation.Menus
                 Console.WriteLine($"ID: {p.InstanceId} - {p.Name} - Price: {Helpers.FormatAsUSD(p.Price)}");
             }
 
-            var productId = Helpers.PositiveIntegerValidation("Product ID: ");
+            var productId = Helpers.PositiveIntegerValidation("\nProduct ID: ");
             var product = _productRepository.GetProductById(productId);
             Console.Clear();
 
@@ -171,5 +174,43 @@ namespace MarketplaceApp.Presentation.Menus
             _productRepository.ProcessTransaction(_customer,product,finalPrice);
             Console.WriteLine("\nPurchase completed successfully!");
         }
+
+        private void ReturnPurchasedProduct()
+        {
+            Console.WriteLine("Your purchase history:\n");
+            if (_customer.PurchaseHistory.Count == 0)
+            {
+                Console.WriteLine("No purchased products to return.");
+                return;
+            }
+
+            for (int i = 0; i < _customer.PurchaseHistory.Count; i++)
+            {
+                var product = _customer.PurchaseHistory[i];
+                Console.WriteLine($"{i + 1}. {product.Name}");
+            }
+
+            var productIndex = Helpers.PositiveIntegerValidation("Enter the number of the product you want to return: ") - 1;
+            Console.Clear();
+
+            if (productIndex < 0 || productIndex >= _customer.PurchaseHistory.Count)
+            {
+                Console.WriteLine("Invalid product selection.");
+                return;
+            }
+
+            var productToReturn = _customer.PurchaseHistory[productIndex];
+
+            if (!Helpers.YesNoValidation($"Are you sure you want to return '{productToReturn.Name}'? (yes/no): "))
+            {
+                Console.WriteLine("\nReturn canceled.");
+                return;
+            }
+
+            var refundAmount=_productRepository.ProcessReturn(_customer, productToReturn);
+            Console.WriteLine($"\nThe product '{productToReturn.Name}' has been successfully returned.");
+            Console.WriteLine($"Refund issued: {Helpers.FormatAsUSD(refundAmount)}. The product is now back for sale.");
+        }
+
     }
 }

@@ -47,9 +47,30 @@ namespace MarketplaceApp.Domain.Repositories
             customer.PurchaseHistory.Add(product);
 
             double commission = finalPrice * 0.05;
+            double sellerEarnings = finalPrice - commission;
             _marketPlace.Balance += commission;
+            product.Seller.Balance += sellerEarnings;
 
             _marketPlace.Transactions.Add(new Transaction(product, customer, product.Seller, finalPrice));
         }
+
+        public double ProcessReturn(Customer customer, Product product)
+        {
+            var transaction = _marketPlace.Transactions
+                .First(t => t.Product.InstanceId == product.InstanceId && 
+                            t.Customer == customer &&
+                            !t.IsReturned);
+            
+            double refundAmount = transaction.Amount * 0.8;
+            customer.Balance += refundAmount;
+            transaction.Seller.Balance -= refundAmount;
+
+            product.Status = ProductStatus.ForSale;
+            transaction.IsReturned = true;
+            customer.PurchaseHistory.Remove(product);
+
+            return refundAmount;
+        }
+
     }
 }
