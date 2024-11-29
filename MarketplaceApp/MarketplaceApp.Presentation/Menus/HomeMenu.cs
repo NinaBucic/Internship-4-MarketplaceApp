@@ -11,10 +11,12 @@ namespace MarketplaceApp.Presentation.Menus
     public class HomeMenu
     {
         private readonly UserRepository _userRepository;
+        private readonly ProductRepository _productRepository;
 
-        public HomeMenu(UserRepository userRepository)
+        public HomeMenu(UserRepository userRepository, ProductRepository productRepository)
         {
             _userRepository = userRepository;
+            _productRepository = productRepository;
         }
 
         public void Show()
@@ -55,7 +57,7 @@ namespace MarketplaceApp.Presentation.Menus
         private void RegisterUser()
         {
             Console.Clear();
-            Console.WriteLine("Register as:\n1 - Customer\n2 - Seller");
+            Console.WriteLine("Register as:\n\n1 - Customer\n2 - Seller");
             var userType = Console.ReadLine();
             Console.Clear();
 
@@ -115,9 +117,9 @@ namespace MarketplaceApp.Presentation.Menus
             }
 
             if (user is Customer customer)
-                new CustomerMenu(customer, _userRepository).Show();
+                new CustomerMenu(customer, _userRepository, _productRepository).Show();
             else if (user is Seller seller)
-                new SellerMenu(seller, _userRepository).Show();
+                new SellerMenu(seller, _userRepository, _productRepository).Show();
         }
     }
 }

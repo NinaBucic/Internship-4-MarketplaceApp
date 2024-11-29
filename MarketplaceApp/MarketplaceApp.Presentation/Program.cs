@@ -12,7 +12,8 @@ namespace MarketplaceApp.Presentation
             Seed.Initialize();
             var marketPlace = new MarketPlace();
             var userRepository = new UserRepository(marketPlace);
-            var homeMenu = new HomeMenu(userRepository);
+            var productRepository = new ProductRepository(marketPlace);
+            var homeMenu = new HomeMenu(userRepository, productRepository);
             homeMenu.Show();
         }
     }

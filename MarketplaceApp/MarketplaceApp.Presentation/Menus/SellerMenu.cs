@@ -12,11 +12,13 @@ namespace MarketplaceApp.Presentation.Menus
     {
         private readonly Seller _seller;
         private readonly UserRepository _userRepository;
+        private readonly ProductRepository _productRepository;
 
-        public SellerMenu(Seller seller, UserRepository userRepository)
+        public SellerMenu(Seller seller, UserRepository userRepository, ProductRepository productRepository)
         {
             _seller = seller;
             _userRepository = userRepository;
+            _productRepository = productRepository;
         }
 
         public void Show()
