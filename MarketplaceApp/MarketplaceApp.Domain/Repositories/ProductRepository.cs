@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+using System.Transactions;
+using Transaction = MarketplaceApp.Data.Entities.Models.Transaction;
 
 namespace MarketplaceApp.Domain.Repositories
 {
@@ -22,5 +25,31 @@ namespace MarketplaceApp.Domain.Repositories
             return _marketPlace.Products.Where(p => p.Status == ProductStatus.ForSale).ToList();
         }
 
+        public List<Product> GetAllProducts()
+        {
+            return _marketPlace.Products;
+        }
+
+        public Product? GetProductById(int id)
+        {
+            return _marketPlace.Products.FirstOrDefault(p => p.InstanceId == id);
+        }
+
+        public PromoCode? GetPromoCodeByCode(string code)
+        {
+            return _marketPlace.PromoCodes.FirstOrDefault(c => c.Code.Equals(code, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public void ProcessTransaction(Customer customer, Product product, double finalPrice)
+        {
+            customer.Balance -= finalPrice;
+            product.Status = ProductStatus.Sold;
+            customer.PurchaseHistory.Add(product);
+
+            double commission = finalPrice * 0.05;
+            _marketPlace.Balance += commission;
+
+            _marketPlace.Transactions.Add(new Transaction(product, customer, product.Seller, finalPrice));
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace MarketplaceApp.Data.Seeds
         public static List<User> Users = new List<User>();
         public static List<Product> Products = new List<Product>();
         public static List<Transaction> Transactions = new List<Transaction>();
+        public static List<PromoCode> PromoCodes = new List<PromoCode>();
         private static bool _initialized = false;
 
         public static void Initialize()
@@ -61,6 +62,9 @@ namespace MarketplaceApp.Data.Seeds
             products[0].Status = ProductStatus.Sold;
             products[2].Status = ProductStatus.Sold;
             products[3].Status = ProductStatus.Sold;
+
+            PromoCodes.Add(new PromoCode("DISCOUNT10", 10, ProductCategory.Electronics, DateTime.Now.AddMonths(1)));
+            PromoCodes.Add(new PromoCode("DISCOUNT20", 20, ProductCategory.ApparelAndAccessories, DateTime.Now.AddMonths(1)));
 
             Users.AddRange(customers.Cast<User>().Concat(sellers.Cast<User>()));
             Products.AddRange(products);

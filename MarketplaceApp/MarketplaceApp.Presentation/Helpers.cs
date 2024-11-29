@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MarketplaceApp.Data.Entities.Models;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -25,6 +27,21 @@ namespace MarketplaceApp.Presentation
                 stringInput = Console.ReadLine();
             }
             return stringInput;
+        }
+
+        public static bool YesNoValidation(string prompt)
+        {
+            Console.Write(prompt);
+            var stringInput = "";
+            stringInput = Console.ReadLine()?.ToLower();
+            while (stringInput != "yes" && stringInput != "no")
+            {
+                Console.Write("Invalid input! Please try again (yes/no): ");
+                stringInput = Console.ReadLine()?.ToLower();
+            }
+            if (stringInput == "yes")
+                return true;
+            return false;
         }
 
         public static string EmailValidation(string prompt)
@@ -61,6 +78,16 @@ namespace MarketplaceApp.Presentation
                 Console.Write("Invalid input! Please enter a positive number: ");
             }
             return doubleInput;
+        }
+
+        public static string FormatAsUSD(double amount)
+        {
+            return amount.ToString("C", new CultureInfo("en-US"));
+        }
+
+        public static bool IsValid(PromoCode code)
+        {
+            return DateTime.Now <= code.ExpirationDate;
         }
     }
 }
