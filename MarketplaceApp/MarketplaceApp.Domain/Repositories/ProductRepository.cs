@@ -89,5 +89,13 @@ namespace MarketplaceApp.Domain.Repositories
             return _marketPlace.Products.Where(p => p.Seller == seller).ToList();
         }
 
+        public List<Product> GetSoldProductsByCategory(Seller seller, ProductCategory category)
+        {
+            return _marketPlace.Transactions
+                .Where(t => t.Seller == seller && t.Product.Status == ProductStatus.Sold && t.Product.Category == category)
+                .Select(t => t.Product)
+                .ToList();
+        }
+
     }
 }

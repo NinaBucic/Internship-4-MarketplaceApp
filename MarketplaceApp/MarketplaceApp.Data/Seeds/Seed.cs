@@ -51,6 +51,10 @@ namespace MarketplaceApp.Data.Seeds
                 new Transaction(products[3], customers[2], sellers[1], products[3].Price)
             };
 
+            sellers[0].Balance += products[0].Price * 0.95;
+            sellers[1].Balance += products[2].Price * 0.95;
+            sellers[1].Balance += products[3].Price * 0.95;
+
             customers[0].Balance -= products[0].Price;
             customers[1].Balance -= products[2].Price;
             customers[2].Balance -= products[3].Price;

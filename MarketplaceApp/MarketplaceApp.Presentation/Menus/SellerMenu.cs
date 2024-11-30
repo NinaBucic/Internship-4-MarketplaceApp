@@ -28,8 +28,7 @@ namespace MarketplaceApp.Presentation.Menus
             {
                 Console.Clear();
                 Console.WriteLine(
-                    $"Welcome, {_seller.Name.ToUpper()}! (Seller)\n" +
-                    $"Your balance: {Helpers.FormatAsUSD(_seller.Balance)}\n\n" +
+                    $"Welcome, {_seller.Name.ToUpper()}! (Seller)\n\n" +
                     "1 - Add Product\n" +
                     "2 - View All Owned Products\n" +
                     "3 - View Total Earnings\n" +
@@ -54,15 +53,18 @@ namespace MarketplaceApp.Presentation.Menus
                         Console.ReadKey();
                         break;
                     case "3":
-                        Console.WriteLine("Press any key to return...");
+                        ViewTotalEarnings();
+                        Console.WriteLine("\nPress any key to return...");
                         Console.ReadKey();
                         break;
                     case "4":
-                        Console.WriteLine("Press any key to return...");
+                        ViewSoldProductsByCategory();
+                        Console.WriteLine("\nPress any key to return...");
                         Console.ReadKey();
                         break;
                     case "5":
-                        Console.WriteLine("Press any key to return...");
+                        ViewEarningsInDateRange();
+                        Console.WriteLine("\nPress any key to return...");
                         Console.ReadKey();
                         break;
                     case "0":
@@ -115,6 +117,48 @@ namespace MarketplaceApp.Presentation.Menus
                     $"  Status: {product.Status}\n"
                     );
             }
+        }
+
+        private void ViewTotalEarnings()
+        {
+            Console.WriteLine($"Your total earnings from sales: {Helpers.FormatAsUSD(_seller.Balance)}");
+        }
+
+        private void ViewSoldProductsByCategory()
+        {
+            var selectedCategory = Helpers.SelectProductCategory();
+            var soldProducts = _productRepository.GetSoldProductsByCategory(_seller, selectedCategory);
+            Console.Clear();
+
+            if (soldProducts.Count == 0)
+            {
+                Console.WriteLine($"No products have been sold in the '{selectedCategory}' category.");
+                return;
+            }
+
+            Console.WriteLine($"Products sold in the '{selectedCategory}' category:\n");
+
+            foreach (var product in soldProducts)
+            {
+                Console.WriteLine($"- {product.Name}: {Helpers.FormatAsUSD(product.Price)}");
+            }
+        }
+
+        private void ViewEarningsInDateRange()
+        {
+            var startDate = Helpers.GetValidDateInput("Enter the start date (YYYY-MM-DD): ");
+            var endDate = Helpers.GetValidDateInput("Enter the end date (YYYY-MM-DD): ");
+            Console.Clear();
+
+            if (endDate < startDate)
+            {
+                Console.WriteLine("End date cannot be earlier than start date.");
+                return;
+            }
+
+            var totalEarnings = _userRepository.GetEarningsInDateRange(_seller, startDate, endDate);
+
+            Console.WriteLine($"Total earnings from {startDate.ToShortDateString()} to {endDate.ToShortDateString()}: {Helpers.FormatAsUSD(totalEarnings)}");
         }
 
     }

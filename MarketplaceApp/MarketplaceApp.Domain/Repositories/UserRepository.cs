@@ -49,5 +49,25 @@ namespace MarketplaceApp.Domain.Repositories
         {
             return _marketPlace.Transactions.Where(t => t.Customer == customer).ToList();
         }
+
+        public double GetEarningsInDateRange(Seller seller, DateTime startDate, DateTime endDate)
+        {
+            var transactionsInRange = _marketPlace.Transactions
+                .Where(t => t.Seller == seller && t.DateAndTime.Date >= startDate && t.DateAndTime.Date <= endDate)
+                .ToList();
+
+            var totalEarnings = 0.0;
+
+            foreach (var transaction in transactionsInRange)
+            {
+                if (transaction.IsReturned)
+                    totalEarnings -= transaction.Amount * 0.8;
+                else
+                    totalEarnings += transaction.Amount * 0.95;
+            }
+
+            return totalEarnings;
+        }
+
     }
 }

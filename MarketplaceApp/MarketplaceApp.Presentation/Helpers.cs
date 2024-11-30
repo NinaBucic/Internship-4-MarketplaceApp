@@ -109,5 +109,16 @@ namespace MarketplaceApp.Presentation
 
             return categories[choice];
         }
+
+        public static DateTime GetValidDateInput(string prompt)
+        {
+            Console.Write(prompt);
+            DateTime date;
+            while (!DateTime.TryParseExact(Console.ReadLine(), "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out date))
+            {
+                Console.Write("Invalid date format. Please enter a valid date (YYYY-MM-DD): ");
+            }
+            return date;
+        }
     }
 }
