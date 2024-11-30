@@ -1,12 +1,5 @@
 ﻿using MarketplaceApp.Data.Entities.Models;
 using MarketplaceApp.Data.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.CompilerServices;
-using System.Transactions;
 using Transaction = MarketplaceApp.Data.Entities.Models.Transaction;
 
 namespace MarketplaceApp.Domain.Repositories

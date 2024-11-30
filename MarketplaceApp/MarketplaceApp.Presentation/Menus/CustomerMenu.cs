@@ -1,13 +1,6 @@
 ﻿using MarketplaceApp.Data.Entities.Models;
 using MarketplaceApp.Domain.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Globalization;
-using System.Linq;
-using System.Net.NetworkInformation;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace MarketplaceApp.Presentation.Menus
 {
