@@ -97,5 +97,15 @@ namespace MarketplaceApp.Domain.Repositories
                 .ToList();
         }
 
+        public bool UpdateProductPrice(Seller seller, int productId, double newPrice)
+        {
+            var product = _marketPlace.Products.FirstOrDefault(p => p.InstanceId == productId && p.Seller == seller);
+
+            if (product == null)
+                return false;
+
+            product.Price = newPrice;
+            return true;
+        }
     }
 }

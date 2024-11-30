@@ -2,6 +2,7 @@
 using MarketplaceApp.Domain.Repositories;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,7 @@ namespace MarketplaceApp.Presentation.Menus
                     "3 - View Total Earnings\n" +
                     "4 - View Sold Products by Category\n" +
                     "5 - View Earnings in Date Range\n" +
+                    "6 - Update Product Price\n" +
                     "0 - Logout"
                     );
 
@@ -64,6 +66,11 @@ namespace MarketplaceApp.Presentation.Menus
                         break;
                     case "5":
                         ViewEarningsInDateRange();
+                        Console.WriteLine("\nPress any key to return...");
+                        Console.ReadKey();
+                        break;
+                    case "6":
+                        UpdateProductPrice();
                         Console.WriteLine("\nPress any key to return...");
                         Console.ReadKey();
                         break;
@@ -161,5 +168,46 @@ namespace MarketplaceApp.Presentation.Menus
             Console.WriteLine($"Total earnings from {startDate.ToShortDateString()} to {endDate.ToShortDateString()}: {Helpers.FormatAsUSD(totalEarnings)}");
         }
 
+        private void UpdateProductPrice()
+        {
+            Console.WriteLine("Update Product Price:\n");
+            Console.WriteLine("NOTE: If the product is currently sold, " +
+                "the new price will be applied once the product is available again on the marketplace.\n");
+
+            var products = _productRepository.GetProductsBySeller(_seller);
+
+            if (products.Count == 0)
+            {
+                Console.WriteLine("You have no products to update.");
+                return;
+            }
+
+            foreach (var product in products)
+            {
+                Console.WriteLine($"ID: {product.InstanceId} - {product.Name} - Price: {Helpers.FormatAsUSD(product.Price)}");
+            }
+
+            var productId = Helpers.PositiveIntegerValidation("\nEnter the product ID to update the price: ");
+            Console.Clear();
+            var productToUpdate = products.FirstOrDefault(p => p.InstanceId == productId);
+
+            if (productToUpdate == null)
+            {
+                Console.WriteLine("Product not found.");
+                return;
+            }
+
+            var newPrice = Helpers.PositiveDoubleValidation($"Enter the new price for the product '{productToUpdate.Name}': ");
+            Console.Clear();
+
+            if (_productRepository.UpdateProductPrice(_seller, productId, newPrice))
+            {
+                Console.WriteLine($"The price of {productToUpdate.Name} has been updated to {Helpers.FormatAsUSD(newPrice)}.");
+            }
+            else
+            {
+                Console.WriteLine("Unable to update the product price.");
+            }
+        }
     }
 }
